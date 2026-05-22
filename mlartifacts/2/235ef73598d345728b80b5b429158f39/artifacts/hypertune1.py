@@ -41,17 +41,10 @@ grid = GridSearchCV(
 mlflow.set_tracking_uri("http://127.0.0.1:5000")
 mlflow.set_experiment("Hyperparameter Tuning of Breast Cancer Dataset")
 
-with mlflow.start_run() as parent:
+with mlflow.start_run():
 
     # Train
     grid.fit(x_train, y_train)
-
-    # Log all child runs
-    for i in range(len(grid.cv_results_['params'])):
-
-        with mlflow.start_run(nested=True) as child:
-            mlflow.log_params(grid.cv_results_['params'][i])
-            mlflow.log_metric("accuracy", grid.cv_results_['mean_test_score'][i])
 
     best_params = grid.best_params_
     best_score = grid.best_score_
